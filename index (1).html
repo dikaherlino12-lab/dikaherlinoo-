@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Sosial Saya</title>
+    <!-- FontAwesome Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        /* --- Latar Belakang Foto Terang & Tanpa Blur --- */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Ganti 'foto-bg.jpg' sesuai nama file foto kamu */
+            background-image: url('https://files.catbox.moe/oetijz.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.95);
+            z-index: 0;
+        }
+
+        /* Lapisan putih transparan sangat tipis */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 1;
+        }
+
+        /* --- Animasi Gelembung Putih/Terang --- */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: rise 10s infinite ease-in-out;
+        }
+
+        .bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; animation-duration: 8s; }
+        .bubble:nth-child(2) { width: 20px; height: 20px; left: 20%; animation-duration: 5s; animation-delay: 1s; }
+        .bubble:nth-child(3) { width: 50px; height: 50px; left: 35%; animation-duration: 10s; animation-delay: 2s; }
+        .bubble:nth-child(4) { width: 80px; height: 80px; left: 50%; animation-duration: 12s; }
+        .bubble:nth-child(5) { width: 35px; height: 35px; left: 65%; animation-duration: 7s; animation-delay: 3s; }
+        .bubble:nth-child(6) { width: 60px; height: 60px; left: 80%; animation-duration: 9s; animation-delay: 1s; }
+        .bubble:nth-child(7) { width: 25px; height: 25px; left: 90%; animation-duration: 6s; animation-delay: 4s; }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Kartu Utama Tema Putih Transparan --- */
+        .card-container {
+            position: relative;
+            z-index: 3;
+            /* Latar belakang putih transparan agar foto tetap kelihatan */
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            width: 100%;
+            max-width: 440px;
+            padding: 30px 24px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
+                        0 0 15px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            color: #1e293b;
+        }
+
+        /* Video Header dengan Tombol Suara */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Tombol Mute / Unmute Suara */
+        .sound-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #0284c7;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #0369a1;
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #0f172a;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .profile-bio {
+            font-size: 13px;
+            color: #334155;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+
+        /* Container Links Putih Transparan */
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .social-card {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 14px;
+            color: #0f172a;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-card i {
+            font-size: 20px;
+            width: 30px;
+            text-align: left;
+        }
+
+        .social-card span {
+            flex-grow: 1;
+            text-align: center;
+            margin-right: 30px;
+        }
+
+        .social-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.85);
+            border-color: #38bdf8;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Warna Ikon Media Sosial */
+        .fa-telegram { color: #0088cc; }
+        .fa-instagram { color: #e1306c; }
+        .fa-tiktok { color: #000000; }
+        .fa-spotify { color: #1ed760; }
+        .fa-discord { color: #5865f2; }
+        .fa-users { color: #0284c7; }
+
+        /* Space Teks Khusus di Paling Bawah (Transparan) */
+        .text-space-section {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px dashed rgba(2, 132, 199, 0.5);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .text-space-section h4 {
+            font-size: 13px;
+            color: #0284c7;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .text-space-section p {
+            font-size: 12px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #475569;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Latar Belakang Foto Terang -->
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Animasi Gelembung -->
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <!-- Kartu Utama Putih Transparan -->
+    <div class="card-container">
+        
+        <!-- Video di Bagian Atas + Tombol Suara -->
+        <div class="video-wrapper" id="videoContainer">
+            <video id="myVideo" autoplay loop muted playsinline>
+                <!-- Ganti link video di bawah dengan file/link video milikmu -->
+                <source src="https://files.catbox.moe/g1igci.mp4" type="video/mp4">
+                Browser Anda tidak mendukung tag video.
+            </video>
+
+            <button class="sound-btn" id="soundBtn">
+                <i class="fa-solid fa-volume-xmark" id="soundIcon"></i>
+                <span id="soundText">aktifkan Suara</span>
+            </button>
+        </div>
+
+        <h1 class="profile-name">Dika Herlino</h1>
+        <p class="profile-bio">kesini yukk</p>
+
+        <!-- Daftar Media Sosial -->
+        <div class="social-links">
+            <a href="https://t.me/dikaaqu" target="_blank" class="social-card">
+                <i class="fa-brands fa-telegram"></i>
+                <span>Telegram</span>
+            </a>
+
+            <a href="https://instagram.com/dikaherlinoo" target="_blank" class="social-card">
+                <i class="fa-brands fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+
+            <a href="https://tiktok.com/notgered" target="_blank" class="social-card">
+                <i class="fa-brands fa-tiktok"></i>
+                <span>TikTok</span>
+            </a>
+
+            <a href="https://open.spotify.com/user/31k2z7eenyzzotyg6pfzqnmzmqza?si=44YxvUFATO-RHSpqlO-DdA&utm_source=copy-link" target="_blank" class="social-card">
+                <i class="fa-brands fa-spotify"></i>
+                <span>Spotify</span>
+            </a>
+
+            <a href="https://discord.gg/ngN8e2km" target="_blank" class="social-card">
+                <i class="fa-brands fa-discord"></i>
+                <span>Discord</span>
+            </a>
+
+            <a href="https://chat.whatsapp.com/EKDPIFiSfIL0fhIQF4Kvo9" target="_blank" class="social-card">
+                <i class="fa-solid fa-users"></i>
+                <span>Join Community Group</span>
+            </a>
+        </div>
+
+        <!-- Space Teks Khusus di Paling Bawah -->
+        <div class="text-space-section">
+            <h4><i class="fa-solid fa-bullhorn"></i>kebutuhan mu:</h4>
+            <p>
+                buy whatsapp bot and buy price ocean digital panel 0,34$ up to 1$ and vps RDP digital ocean 0.50$ to 1$ and others dm discord 
+            </p>
+        </div>
+
+        <div class="footer">
+            © 2026 My Social Links. All rights reserved.
+        </div>
+
+    </div>
+
+    <!-- Script JavaScript untuk Fitur Suara Video -->
+    <script>
+        const video = document.getElementById('myVideo');
+        const soundBtn = document.getElementById('soundBtn');
+        const soundIcon = document.getElementById('soundIcon');
+        const soundText = document.getElementById('soundText');
+        const videoContainer = document.getElementById('videoContainer');
+
+        function toggleSound(e) {
+            if (e) e.stopPropagation();
+            
+            if (video.muted) {
+                video.muted = false;
+                soundIcon.className = 'fa-solid fa-volume-high';
+                soundText.innerText = 'Suara On';
+            } else {
+                video.muted = true;
+                soundIcon.className = 'fa-solid fa-volume-xmark';
+                soundText.innerText = 'Aktifkan Suara';
+            }
+        }
+
+        soundBtn.addEventListener('click', toggleSound);
+        videoContainer.addEventListener('click', toggleSound);
+    </script>
+
+</body>
+</html>
